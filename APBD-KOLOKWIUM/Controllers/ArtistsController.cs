@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using APBD_KOLOKWIUM.DAL;
@@ -38,9 +39,26 @@ namespace APBD_KOLOKWIUM.Controllers
 
         // GET api/<ArtistsController>/5
         [HttpGet("{id}")]
-        public string Get(int id)
+        public async Task<IActionResult> Get(int id)
         {
-            return "value";
+            try
+            {
+                var artist = await _funContext.Artists
+                .Where(artist => artist.IdArtist.Equals(id))
+                .Select(artist => new {
+                    artist.IdArtist,
+                    artist.Nickname,
+                    events = artist.ArtistEvents
+                    .OrderByDescending(artistEvent => artistEvent.Event.StartDate)
+                    .Select(artistEvent => new { artistEvent.Event.IdEvent, artistEvent.Event.Name, artistEvent.Event.StartDate, artistEvent.Event.EndDate })
+                }).FirstAsync();
+
+                return Ok(artist);
+            } catch(InvalidOperationException exception)
+            {
+                Console.WriteLine(exception);
+                return NotFound("Artist not found");
+            }
         }
 
         // POST api/<ArtistsController>
