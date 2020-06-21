@@ -34,7 +34,7 @@ namespace APBD_KOLOKWIUM.Controllers
                 artist.Nickname,
                 events = artist.ArtistEvents
                 .OrderByDescending(artistEvent => artistEvent.Event.StartDate)
-                .Select(artistEvent => new { artistEvent.Event.IdEvent, artistEvent.Event.Name, artistEvent.Event.StartDate, artistEvent.Event.EndDate })
+                .Select(artistEvent => new { artistEvent.Event.IdEvent, artistEvent.Event.Name, artistEvent.Event.StartDate, artistEvent.Event.EndDate, artistEvent.PerformanceDate })
             }).ToListAsync();
             // https://github.com/dotnet/efcore/issues/19639
 
