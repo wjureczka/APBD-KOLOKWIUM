@@ -9,12 +9,6 @@ namespace APBD_KOLOKWIUM.DTO.Requests
     public class UpdateArtistEventTimeRequest
     {
         [Required]
-        public int IdArtist { get; set; }
-
-        [Required]
-        public int IdEvent { get; set; }
-
-        [Required]
         public DateTime PerformanceDate { get; set; }
     }
 }

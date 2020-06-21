@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using APBD_KOLOKWIUM.DAL;
 using APBD_KOLOKWIUM.DTO.Requests;
+using APBD_KOLOKWIUM.DTO.Responses;
 using APBD_KOLOKWIUM.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -73,14 +74,14 @@ namespace APBD_KOLOKWIUM.Controllers
                 return NotFound("Artist not found");
             }
 
-            var ev = await _funContext.Events.FindAsync(eventId);
+            var eventData = await _funContext.Events.FindAsync(eventId);
 
-            if (ev == null)
+            if (eventData == null)
             {
                 return NotFound("Event not found");
             }
 
-            if (ev.StartDate > request.PerformanceDate || ev.EndDate < request.PerformanceDate)
+            if (eventData.StartDate > request.PerformanceDate || eventData.EndDate < request.PerformanceDate)
             {
                 return BadRequest("Performance date has to be between start and end date");
             }
@@ -91,7 +92,12 @@ namespace APBD_KOLOKWIUM.Controllers
 
             await _funContext.SaveChangesAsync();
 
-            return Ok();
+            return Ok(new UpdateArtistEventTimeResponse
+            {
+                IdArtist = artist.IdArtist,
+                IdEvent = eventData.IdEvent,
+                PerformanceDate = request.PerformanceDate
+            });
         }
     }
 }
