@@ -1,4 +1,6 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.Collections;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 
 namespace APBD_KOLOKWIUM.Models
@@ -11,5 +13,7 @@ namespace APBD_KOLOKWIUM.Models
         [Required]
         [MaxLength(30)]
         public string Nickname { get; set; }
+
+        public ICollection<Artist_Event> ArtistEvents { get; set; }
     }
 }

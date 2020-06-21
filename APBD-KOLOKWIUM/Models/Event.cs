@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace APBD_KOLOKWIUM.Models
@@ -17,5 +18,7 @@ namespace APBD_KOLOKWIUM.Models
         
         [Required]
         public DateTime EndDate { get; set; }
+
+        public ICollection<Artist_Event> EventArtists { get; set; }
     }
 }
