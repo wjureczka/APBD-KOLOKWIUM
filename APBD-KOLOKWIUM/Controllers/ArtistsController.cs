@@ -24,7 +24,7 @@ namespace APBD_KOLOKWIUM.Controllers
         {
             _funContext = funContext;
         }
-        // GET: api/<ArtistsController>
+
         [HttpGet]
         public async Task<IActionResult> Get()
         {
@@ -40,7 +40,6 @@ namespace APBD_KOLOKWIUM.Controllers
             return Ok(artists);
         }
 
-        // GET api/<ArtistsController>/5
         [HttpGet("{id}")]
         public async Task<IActionResult> Get(int id)
         {
@@ -64,13 +63,6 @@ namespace APBD_KOLOKWIUM.Controllers
             }
         }
 
-        // POST api/<ArtistsController>
-        [HttpPost]
-        public void Post([FromBody] string value)
-        {
-        }
-
-        // PUT api/<ArtistsController>/5
         [HttpPut("{artistId}/events/{eventId}")]
         public async Task<IActionResult> Put(int artistId, int eventId, [FromBody] UpdateArtistEventTimeRequest request)
         {
@@ -100,12 +92,6 @@ namespace APBD_KOLOKWIUM.Controllers
             await _funContext.SaveChangesAsync();
 
             return Ok();
-        }
-
-        // DELETE api/<ArtistsController>/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
-        {
         }
     }
 }
