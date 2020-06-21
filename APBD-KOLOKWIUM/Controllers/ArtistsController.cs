@@ -88,12 +88,12 @@ namespace APBD_KOLOKWIUM.Controllers
                 return NotFound("Event not found");
             }
 
-            if (ev.StartDate < request.PerformanceDate && ev.EndDate > request.PerformanceDate)
+            if (ev.StartDate > request.PerformanceDate || ev.EndDate < request.PerformanceDate)
             {
                 return BadRequest("Performance date has to be between start and end date");
             }
 
-            var artistEvent = await _funContext.Artist_Events.FindAsync(eventId);
+            var artistEvent = await _funContext.Artist_Events.FindAsync(artist.IdArtist, eventId);
 
             artistEvent.PerformanceDate = request.PerformanceDate;
 
