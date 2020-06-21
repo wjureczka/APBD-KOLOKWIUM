@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using System;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace APBD_KOLOKWIUM.Models
 {
@@ -13,5 +14,7 @@ namespace APBD_KOLOKWIUM.Models
 
         [ForeignKey("IdArtist")]
         public Artist Artist { get; set; }
+
+        public DateTime PerformanceDate { get; set; }
     }
 }

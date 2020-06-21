@@ -3,9 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using APBD_KOLOKWIUM.DAL;
+using APBD_KOLOKWIUM.DTO.Requests;
 using APBD_KOLOKWIUM.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -33,6 +35,7 @@ namespace APBD_KOLOKWIUM.Controllers
                 .OrderByDescending(artistEvent => artistEvent.Event.StartDate)
                 .Select(artistEvent => new { artistEvent.Event.IdEvent, artistEvent.Event.Name, artistEvent.Event.StartDate, artistEvent.Event.EndDate })
             }).ToListAsync();
+            // https://github.com/dotnet/efcore/issues/19639
 
             return Ok(artists);
         }
@@ -50,7 +53,7 @@ namespace APBD_KOLOKWIUM.Controllers
                     artist.Nickname,
                     events = artist.ArtistEvents
                     .OrderByDescending(artistEvent => artistEvent.Event.StartDate)
-                    .Select(artistEvent => new { artistEvent.Event.IdEvent, artistEvent.Event.Name, artistEvent.Event.StartDate, artistEvent.Event.EndDate })
+                    .Select(artistEvent => new { artistEvent.Event.IdEvent, artistEvent.Event.Name, artistEvent.Event.StartDate, artistEvent.Event.EndDate, artistEvent.Event })
                 }).FirstAsync();
 
                 return Ok(artist);
@@ -68,9 +71,35 @@ namespace APBD_KOLOKWIUM.Controllers
         }
 
         // PUT api/<ArtistsController>/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        [HttpPut("{artistId}/events/{eventId}")]
+        public async Task<IActionResult> Put(int artistId, int eventId, [FromBody] UpdateArtistEventTimeRequest request)
         {
+            var artist = await _funContext.Artists.FindAsync(artistId);
+
+            if (artist == null)
+            {
+                return NotFound("Artist not found");
+            }
+
+            var ev = await _funContext.Events.FindAsync(eventId);
+
+            if (ev == null)
+            {
+                return NotFound("Event not found");
+            }
+
+            if (ev.StartDate < request.PerformanceDate && ev.EndDate > request.PerformanceDate)
+            {
+                return BadRequest("Performance date has to be between start and end date");
+            }
+
+            var artistEvent = await _funContext.Artist_Events.FindAsync(eventId);
+
+            artistEvent.PerformanceDate = request.PerformanceDate;
+
+            await _funContext.SaveChangesAsync();
+
+            return Ok();
         }
 
         // DELETE api/<ArtistsController>/5
